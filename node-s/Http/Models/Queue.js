@@ -30,6 +30,25 @@ class Queue {
         // Procedimentos AMQP
         await this.criarCanal();
         await this.enfileirar();
+        await this.fecharConexao();
+    }
+
+    /**
+     * Consumir Mensagem
+     */
+    async consumirMensagem(queue) {
+        // Seta a fila
+        this.queue = queue;
+        // Cria o canal
+        await this.criarCanal();
+        // Opções de consumo
+        const options = { noAck: true };
+        console.log(" [*] Aguardando por mensagens em %s.", this.queue);
+        // Consumo de mensagem
+        await this.channel.consume(queue, (msg) => {
+            console.log(" [x] Recebida %s", msg.content.toString());
+            return msg.content.toString();
+        }, options);
     }
 
     /**
@@ -37,21 +56,24 @@ class Queue {
      */
     async criarCanal() {
         this.channel = await this.connection.createChannel();
+        // Canal na fila x
+        await this.channel.assertQueue(this.queue, {
+            durable: false
+        });
     }
 
     /**
      * Insere a mensagem na fila definida
      */
     async enfileirar() {
-        // Canal na fila x
-        await this.channel.assertQueue(this.queue, {
-            durable: false
-        });
         // Envio para fila
         this.channel.sendToQueue(this.queue, Buffer.from(this.message));
         // Mensagem enviada
-        console.log(" [x] Sent %s", this.message);
+        console.log(" [x] Enviada %s", this.message);
     }
 
+    async fecharConexao() {
+        await this.connection.close();
+    }
 }
 module.exports = Queue;

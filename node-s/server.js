@@ -22,6 +22,7 @@ app.get('/teste', (req, res) => {
 });
 
 app.post('/criar-mensagem', (req, res, next) => QueueController.criarMensagem(req, res, next));
+app.post('/consumir-mensagem', (req, res, next) => QueueController.consumirMensagens(req, res, next));
 
 app.listen(port, () => {
   console.log(`Node Rabbit MQ http://localhost:${port}`)
