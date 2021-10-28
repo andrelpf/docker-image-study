@@ -30,7 +30,7 @@ class Queue {
         // Procedimentos AMQP
         await this.criarCanal();
         await this.enfileirar();
-        await this.fecharConexao();
+        // await this.fecharConexao();
     }
 
     /**
@@ -42,24 +42,37 @@ class Queue {
         // Cria o canal
         await this.criarCanal();
         // Opções de consumo
-        const options = { noAck: true };
         console.log(" [*] Aguardando por mensagens em %s.", this.queue);
         // Consumo de mensagem
-        await this.channel.consume(queue, (msg) => {
-            console.log(" [x] Recebida %s", msg.content.toString());
-            return msg.content.toString();
-        }, options);
+        await this.consumir();
+        // await this.fecharConexao();
+    }
+
+    /** Método para consumir as mensagens no canal */
+    async consumir() {
+        console.log('Inicio de consumo');
+        await this.channel.consume(this.queue, (msg) => {
+            if (msg !== null) {
+                this.logMessage(msg);
+                this.channel.ack(msg);
+            }
+        });
     }
 
     /**
-     * Cria um canal de comunicação AMQP
+     * Logar mensagem lida
+     */
+    logMessage(msg) {
+        console.log(' [x] Nova mensagem: %s ', msg.content.toString());
+    }
+
+    /**
+     * Cria um canal de comunicação AMQP para produzir mensagens
      */
     async criarCanal() {
         this.channel = await this.connection.createChannel();
         // Canal na fila x
-        await this.channel.assertQueue(this.queue, {
-            durable: false
-        });
+        await this.channel.assertQueue(this.queue);
     }
 
     /**

@@ -42,9 +42,9 @@ class QueueController {
             // Criar conexao da queue
             await queue.criarConexao();
             // Envio do body para a fila
-            const message = await queue.consumirMensagem(body.queue);
+            await queue.consumirMensagem(body.queue);
             // Response
-            res.status(200).send({ sucess: true, message });
+            res.status(200).send({ sucess: true, message: 'Leitura em andamento' });
         } catch (error) {
             // Response Error
             res.status(500).send({ message: error.message, stack: error.stack });
