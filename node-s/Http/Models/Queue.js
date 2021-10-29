@@ -1,6 +1,7 @@
 // const amqp = require('amqplib');
 const amqp = require('amqplib');
 const amqp_cb = require('amqplib/callback_api');
+
 class Queue {
     /** @type {amqp.Connection} */
     connection;
@@ -14,10 +15,14 @@ class Queue {
     // Definição do constructor
     constructor() { }
 
+    /**
+     * Método para abrir a conexão
+     */
     async criarConexao() {
         // Abrindo a conexão
         this.connection = await amqp.connect(process.env.FILA_ENDPOINT);
     }
+
     /**
      * Método para realizar o envio da mensagem
      * @param {string} queue
@@ -30,7 +35,7 @@ class Queue {
         // Procedimentos AMQP
         await this.criarCanal();
         await this.enfileirar();
-        // await this.fecharConexao();
+        await this.fecharConexao();
     }
 
     /**
@@ -48,7 +53,9 @@ class Queue {
         await this.fecharConexao();
     }
 
-    /** Método para consumir as mensagens no canal */
+    /**
+     *  Método para consumir as mensagens no canal
+     */
     async consumir() {
         console.log(' [*] Inicio de consumo');
         await this.channel.consume(this.queue, (msg) => {
@@ -72,7 +79,7 @@ class Queue {
     async criarCanal() {
         this.channel = await this.connection.createChannel();
         // Canal na fila x
-        await this.channel.assertQueue(this.queue);
+        await this.channel.assertQueue(this.queue, { durable: false });
     }
 
     /**
@@ -85,7 +92,11 @@ class Queue {
         console.log(" [x] Enviada %s", this.message);
     }
 
+    /**
+     * Método que fecha a conexão
+     */
     async fecharConexao() {
+        await this.channel.close();
         await this.connection.close();
     }
 }
