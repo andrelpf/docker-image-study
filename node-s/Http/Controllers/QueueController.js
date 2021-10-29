@@ -41,9 +41,9 @@ class QueueController {
             const body = req.body;
             // Criar conexao da queue
             await queue.criarConexao();
-            // Envio do body para a fila
+            // Envio do nome da fila
             await queue.consumirMensagem(body.queue);
-            // Response
+            // Response retorno
             res.status(200).send({ sucess: true, message: 'Leitura em andamento' });
         } catch (error) {
             // Response Error

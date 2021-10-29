@@ -37,26 +37,26 @@ class Queue {
      * Consumir Mensagem
      */
     async consumirMensagem(queue) {
-        // Seta a fila
+        // Seta a fila como uma propriedade
         this.queue = queue;
-        // Cria o canal
+        // Cria o canal de comunicação
         await this.criarCanal();
-        // Opções de consumo
+        // Log de mensagens dentro da queue
         console.log(" [*] Aguardando por mensagens em %s.", this.queue);
         // Consumo de mensagem
         await this.consumir();
-        // await this.fecharConexao();
+        await this.fecharConexao();
     }
 
     /** Método para consumir as mensagens no canal */
     async consumir() {
-        console.log('Inicio de consumo');
+        console.log(' [*] Inicio de consumo');
         await this.channel.consume(this.queue, (msg) => {
             if (msg !== null) {
                 this.logMessage(msg);
                 this.channel.ack(msg);
             }
-        });
+        }, { noAck: true });
     }
 
     /**
