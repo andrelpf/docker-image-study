@@ -1,0 +1,69 @@
+version: '3'
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  portainer_data:
+
+services:
+  node-s:
+    build:
+        context: ./node-s
+    container_name: nodejss
+    hostname: nodejss
+    ports:
+       - "3000:3000"
+    networks:
+      - net-example
+
+  angular-s:
+    build:
+      context: ./angular-s
+    container_name: angulars
+    hostname: angulars
+    ports:
+      - "4200:4200"
+    networks:
+      - net-example
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    hostname: nginx
+    ports:
+       - "80:80"
+    networks:
+      - net-example
+  rabbitmq:
+    image: docker.io/bitnami/rabbitmq:3.8
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: unless-stopped
+    ports:
+    - '4369:4369'
+    - '5672:5672'
+    - '25672:25672'
+    - '15672:15672'
+    environment:
+    - RABBITMQ_SECURE_PASSWORD=yes
+    volumes:
+    - 'rabbitmq_data:/bitnami'
+    networks:
+    - net-example
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    hostname: portainer
+    restart: always
+    ports:
+      - 9000:9000
+      - 8000:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+    - net-example
+networks:
+  net-example:
+    external: true
