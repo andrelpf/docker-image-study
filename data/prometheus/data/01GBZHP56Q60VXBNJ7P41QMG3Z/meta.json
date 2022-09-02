@@ -1,0 +1,17 @@
+{
+	"ulid": "01GBZHP56Q60VXBNJ7P41QMG3Z",
+	"minTime": 1662126537501,
+	"maxTime": 1662127200000,
+	"stats": {
+		"numSamples": 665,
+		"numSeries": 5,
+		"numChunks": 5
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GBZHP56Q60VXBNJ7P41QMG3Z"
+		]
+	},
+	"version": 1
+}

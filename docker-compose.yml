@@ -12,7 +12,7 @@ services:
     container_name: nodejss
     hostname: nodejss
     ports:
-       - "3000:3000"
+       - "8080:8080"
     networks:
       - net-example
 
@@ -64,6 +64,32 @@ services:
       - portainer_data:/data
     networks:
     - net-example
+  prometheus:
+    hostname: prometheus
+    image: quay.io/prometheus/prometheus
+    container_name: prometheus
+    volumes:
+     - ./etc/prometheus/:/etc/prometheus/
+     - ./data/prometheus/:/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+     - 9090:9090
+    networks:
+     - net-example
+  grafana:
+    hostname: grafana
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+     - 3000:3000
+    volumes:
+      - ./data/grafana/:/var/lib/grafana
+      - ./etc/grafana/:/etc/grafana/provisioning/
+    depends_on:
+      - prometheus
+    networks:
+     - net-example
 networks:
   net-example:
     external: true
