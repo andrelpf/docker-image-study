@@ -45,7 +45,10 @@ services:
     - '25672:25672'
     - '15672:15672'
     environment:
+    - RABBITMQ_USERNAME=andre
+    - RABBITMQ_PASSWORD=andre
     - RABBITMQ_SECURE_PASSWORD=yes
+    - RABBITMQ_DISK_FREE_ABSOLUTE_LIMIT=1MB
     volumes:
     - 'rabbitmq_data:/bitnami'
     networks:
