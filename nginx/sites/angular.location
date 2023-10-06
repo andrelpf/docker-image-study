@@ -1,0 +1,5 @@
+ # Angular
+  location / {
+    include conf.d/common.include;
+    proxy_pass http://angulars:4200;
+  }

@@ -1,0 +1,6 @@
+
+  # Node
+   location /node/ {
+    include conf.d/common.include;
+    proxy_pass http://nodejss:8080/;
+  }

@@ -1,0 +1,16 @@
+  # RabbitMQ
+   location /fila/api/ {
+    rewrite ^ $request_uri;
+    rewrite ^/fila/api/(.*) /api/$1 break;
+    return 400;
+    proxy_pass http://rabbitmq:15672$uri;
+  }
+
+  # RabbitMQ
+  location /fila/ {
+    rewrite ^/fila$ /fila/ permanent;
+    rewrite ^/fila/(.*)$ /$1 break;
+    proxy_pass http://rabbitmq:15672;
+    proxy_buffering                    off;
+    include conf.d/common.include;
+  }

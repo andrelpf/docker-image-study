@@ -1,0 +1,18 @@
+[
+    {
+      "targets": [
+        "nodejss:8080"
+      ],
+      "labels": {
+        "job": "node"
+      }
+    },
+    {
+      "targets": [
+        "tst.invoicecon.com.br/api/"
+      ],
+      "labels": {
+        "job": "node"
+      }
+    }
+  ]

@@ -1,0 +1,6 @@
+
+  # Portainer
+   location /portainer/ {
+    include conf.d/common.include;
+    proxy_pass http://portainer:9000/;
+  }
